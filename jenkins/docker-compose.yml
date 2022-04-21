@@ -1,0 +1,26 @@
+version: '3.8'
+
+networks:
+  jenkins:
+    external:
+      name: custom_network
+
+services:
+  jenkins:
+    networks:
+      - jenkins
+    build: .
+    hostname: jenkins
+    container_name: jenkins
+    volumes:
+      - ./data/jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config:/var/jenkins_home/config
+      - ../shared/jenkins:/tmp/jenkins:ro
+    environment:
+      JENKINS_HOST_HOME: /data/jenkins
+    env_file: ../shared/jenkins
+    ports:
+      - "8080:8080"
+      - "5000:5000"
+      - "50000:50000"

@@ -1,0 +1,19 @@
+# helpful-commands
+
+TF_TOKEN=
+TF_ORG=
+TF_WORKSPACE=
+
+# find TF version requirement
+curl --silent --show-error --fail \
+--header "Authorization: Bearer $TF_TOKEN" \
+--header "Content-Type: application/vnd.api+json" https://app.terraform.io/api/v2/organizations/$TF_ORG/workspaces/$TF_WORKSPACE | jq -r '.data.attributes."terraform-version"'
+
+# list TF variables
+curl --header "Authorization: Bearer $TF_TOKEN" \
+--header "Content-Type: application/vnd.api+json" "https://app.terraform.io/api/v2/workspaces/ws-QfWbS1xxe6eYpBaU/vars" | jq -r
+#https://www.terraform.io/cloud-docs/api-docs/workspace-variables
+
+# List workspaces
+curl --silent --show-error --fail --header "Authorization: Bearer $TF_TOKEN" \
+--header "Content-Type: application/vnd.api+json" https://app.terraform.io/api/v2/organizations/$TF_ORG/workspaces | jq -r '.data[] | .attributes.name'

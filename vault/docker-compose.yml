@@ -1,0 +1,22 @@
+version: '3.8'
+
+networks:
+  vault:
+    name: custom_network
+
+services:
+  vault:
+    build: .
+    hostname: vault
+    container_name: vault
+    networks:
+      - vault
+    ports:
+      - 8200:8200
+    env_file: .env
+    volumes:
+      - ./policies:/vault/policies:ro
+      - ./plugins:/vault/plugins:ro
+      - ../shared:/tmp/shared:rw
+    cap_add:
+      - IPC_LOCK

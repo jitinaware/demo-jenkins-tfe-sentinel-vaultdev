@@ -1,0 +1,36 @@
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: ${username}
+         password: ${password}
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "USER:Overall/Administer:${username}"
+        - "USER:Overall/Read:authenticated"
+security:
+  queueItemAuthenticator:
+    authenticators:
+    - global:
+        strategy: triggeringUsersAuthorizationStrategy
+unclassified:
+  location:
+    url: http://jenkins:8080
+  hashicorpVault:
+    configuration:
+      engineVersion: 2
+      skipSslVerification: true
+      vaultCredentialId: "jenkins-build-approle-secret"
+      vaultUrl: "http://vault:8200"
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - vaultAppRoleCredential:
+              scope: GLOBAL
+              id: "jenkins-build-approle-secret"
+              description: "jenkins-build-approle-secret"
+              roleId: "${VAULT_ROLE_ID}"
+              secretId: "${VAULT_SECRET_ID}"

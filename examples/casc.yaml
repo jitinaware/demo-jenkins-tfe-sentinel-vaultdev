@@ -1,0 +1,57 @@
+
+
+
+# HashiCorp Vault
+
+credentials:
+  system:
+    domainCredentials:
+      # global credentials
+      - credentials: 
+      # must be 4 spaced after this point
+          - usernamePassword:
+              scope: GLOBAL
+              id: artifactory
+              username: "${ARTIFACTORY_USERNAME}"
+              password: "${ARTIFACTORY_PASSWORD}"
+          - usernamePassword:
+              scope: GLOBAL
+              id: vsphere
+              username: "${VSPHERE_USERNAME}"
+              password: "${VSPHERE_PASSWORD}"
+          - usernamePassword:
+              scope: GLOBAL
+              id: jenkins_devops
+              username: "${JENKINS_DEVOPS_USERNAME}"
+              password: "${JENKINS_DEVOPS_APITOKEN}"
+              description: Automated administrative tasks in Jenkins
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: gitlab_ssh_key
+              username: git
+              description: SSH key for GitLab
+              privateKeySource:
+                directEntry:
+                  privateKey: "${SSH_PRIVATE_KEY}"
+          - GitLabApiTokenImpl:
+              scope: GLOBAL
+              id: gitlab_token
+              apiToken: "${GITLAB_TOKEN}"
+              description: Gitlab Token
+          - string:
+              scope: GLOBAL
+              id: slack-token
+              secret: "${SLACK_TOKEN}"
+              description: Slack token
+          - usernamePassword:
+              scope: GLOBAL
+              id: "gitlabrunner"
+              description: "gitlab runner"
+              username: "gitlab-runner"
+              password: "${GITLABRUNNER_PASSWORD}"
+          - vaultAppRoleCredential:
+              scope: GLOBAL
+              id: "jenkins-build-approle-secret"
+              description: "jenkins-build-approle-secret"
+              roleId: "${BUILD_APPROLE_ID}"
+              secretId: "${BUILD_APPROLE_SECRET_ID}"

@@ -1,0 +1,11 @@
+
+
+
+VAULT_ADDR=http://vault:8200
+JENKINS_TOKEN=token
+
+
+
+
+username=jenkinsuser
+password=changeme

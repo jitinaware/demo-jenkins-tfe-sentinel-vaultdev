@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+case "$1" in
+    build)
+      pushd vault
+      docker-compose up -d
+      echo "Waiting for Vault to seed..."
+      sleep 30s
+      popd
+      pushd jenkins
+      docker-compose up -d
+      popd
+      ;;
+    destroy)
+      pushd jenkins
+      docker-compose down -v --rmi all
+      find data/jenkins -mindepth 1 -delete
+      popd
+      pushd vault
+      docker-compose down -v --rmi all
+      find tmp -mindepth 1 ! -name '*.md' -delete
+      popd
+      sed -i '' "s/^JENKINS_TOKEN=.*/JENKINS_TOKEN=token/g" ./shared/jenkins
+      sed -i '' "s/^ROOT_TF_TOKEN=.*/ROOT_TF_TOKEN=token/g" ./shared/vault
+      ;;
+    rebuild)
+      pushd jenkins
+      docker-compose down -v --rmi all
+      find data/jenkins -mindepth 1 -delete
+      docker-compose up -d
+      popd
+      pushd vault
+      docker-compose down -v --rmi all
+      find tmp -mindepth 1 ! -name '*.md' -delete
+      docker-compose up -d
+      echo "Waiting for Vault to seed..."
+      sleep 30s
+      popd
+      ;;
+    *)
+      printf "\n%s" \
+      "Builds & configures the Vault & Jenkins containers" \
+      "Usage: $script_name [build|destroy|rebuild]" \
+      "" \
+      ""
+      ;;
+esac
